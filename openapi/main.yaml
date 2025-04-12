@@ -10,7 +10,7 @@ tags:
   - name: "Demo"
     description: "Everything about Comment"
 paths:
-  /fee:
+  /comment:
     post:
       summary: "add new comment"
       operationId: "addComment"
@@ -30,7 +30,7 @@ paths:
                 $ref: '#/components/schemas/CommentIdDTO'
     get:
       summary: "Get all comments"
-      operationId: "getAllComment"
+      operationId: "getAllComments"
       tags:
         - "Comment"
       responses:

@@ -2,9 +2,9 @@ package com.fastrelay.comments.api;
 
 
 import com.fastrelay.comment.api.CommentApi;
+import com.fastrelay.comment.dto.AddCommentDTO;
 import com.fastrelay.comment.dto.CommentDTO;
 import com.fastrelay.comment.dto.CommentIdDTO;
-import com.fastrelay.comment.dto.CreateCommentDTO;
 import com.fastrelay.comments.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,29 +21,35 @@ public class CommentResource implements CommentApi {
     private final CommentService commentService;
 
     @Override
-    public ResponseEntity<CommentIdDTO> createComment(CreateCommentDTO createCommentDTO) {
+    public ResponseEntity<CommentIdDTO> addComment(AddCommentDTO addCommentDTO) {
         return ResponseEntity
             .status(HttpStatus.CREATED)
-            .body(commentService.addComment(createCommentDTO));
+            .body(commentService.addComment(addCommentDTO));
     }
 
     @Override
-    public ResponseEntity<List<CommentDTO>> getAllComment() {
-        return null;
+    public ResponseEntity<List<CommentDTO>> getAllComments() {
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(commentService.getAllComments());
     }
 
     @Override
     public ResponseEntity<CommentDTO> getCommentById(UUID commentId) {
-        return null;
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(commentService.getById(commentId));
     }
 
     @Override
     public ResponseEntity<Void> postComment(UUID commentId) {
-        return null;
+        commentService.postComment(commentId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @Override
     public ResponseEntity<Void> removeComment(UUID commentId) {
-        return null;
+        commentService.removeComment(commentId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
