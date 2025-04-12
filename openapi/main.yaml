@@ -1,18 +1,18 @@
 openapi: 3.0.3
 info:
-  title: "Comments Rest API"
+  title: "Comment Rest API"
   description: "All comment Rest API Endpoints"
   version: "v1"
 servers:
   - url: "https"
   - url: 'http'
 tags:
-  - name: "Comment"
-    description: "Everything about the Comment"
+  - name: "Demo"
+    description: "Everything about Comment"
 paths:
-  /comment:
+  /fee:
     post:
-      summary: "create new comment"
+      summary: "add new comment"
       operationId: "addComment"
       tags:
         - "Comment"
@@ -20,7 +20,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateCommentDTO'
+              $ref: '#/components/schemas/AddCommentDTO'
       responses:
         201:
           description: "Successful operation"
@@ -29,8 +29,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/CommentIdDTO'
     get:
-      summary: "Get all comment"
-      operationId: "getAllComments"
+      summary: "Get all comments"
+      operationId: "getAllComment"
       tags:
         - "Comment"
       responses:
@@ -45,7 +45,7 @@ paths:
   /comment/{commentId}/post:
     put:
       summary: "post comment"
-      description: "post a comment"
+      description: "post comment"
       operationId: "postComment"
       tags:
         - "Comment"
@@ -78,10 +78,10 @@ paths:
           description: "Successful operation"
   /comment/{commentId}:
     get:
-      summary: "get comment by id"
+      summary: "get comment by Id"
       operationId: "getCommentById"
       tags:
-        - "Fee"
+        - "Comment"
       parameters:
         - name: "commentId"
           in: "path"
@@ -101,17 +101,17 @@ components:
     CommentDTO:
       properties:
         title:
-          type: string
+          type: "string"
         content:
-          type: string
+          type: "string"
+    AddCommentDTO:
+      properties:
+        title:
+          type: "string"
+        content:
+          type: "string"
     CommentIdDTO:
       properties:
         value:
           type: string
           format: uuid
-    CreateCommentDTO:
-      properties:
-        title:
-          type: string
-        content:
-          type: string
