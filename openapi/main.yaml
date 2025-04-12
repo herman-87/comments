@@ -1,0 +1,117 @@
+openapi: 3.0.3
+info:
+  title: "Comments Rest API"
+  description: "All comment Rest API Endpoints"
+  version: "v1"
+servers:
+  - url: "https"
+  - url: 'http'
+tags:
+  - name: "Comment"
+    description: "Everything about the Comment"
+paths:
+  /comment:
+    post:
+      summary: "create new comment"
+      operationId: "addComment"
+      tags:
+        - "Comment"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCommentDTO'
+      responses:
+        201:
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentIdDTO'
+    get:
+      summary: "Get all comment"
+      operationId: "getAllComments"
+      tags:
+        - "Comment"
+      responses:
+        '200':
+          description: "Successful response"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/CommentDTO"
+  /comment/{commentId}/post:
+    put:
+      summary: "post comment"
+      description: "post a comment"
+      operationId: "postComment"
+      tags:
+        - "Comment"
+      parameters:
+        - name: "commentId"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+            format: "uuid"
+      responses:
+        '204':
+          description: "Successful operation"
+  /comment/{commentId}/remove:
+    put:
+      summary: "remove comment"
+      description: "remove comment"
+      operationId: "removeComment"
+      tags:
+        - "Comment"
+      parameters:
+        - name: "commentId"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+            format: "uuid"
+      responses:
+        '204':
+          description: "Successful operation"
+  /comment/{commentId}:
+    get:
+      summary: "get comment by id"
+      operationId: "getCommentById"
+      tags:
+        - "Fee"
+      parameters:
+        - name: "commentId"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+            format: "uuid"
+      responses:
+        '200':
+          description: "Successful response"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CommentDTO"
+components:
+  schemas:
+    CommentDTO:
+      properties:
+        title:
+          type: string
+        content:
+          type: string
+    CommentIdDTO:
+      properties:
+        value:
+          type: string
+          format: uuid
+    CreateCommentDTO:
+      properties:
+        title:
+          type: string
+        content:
+          type: string

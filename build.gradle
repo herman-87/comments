@@ -1,0 +1,93 @@
+buildscript {
+    dependencies {
+        classpath("org.openapitools:openapi-generator-gradle-plugin:7.4.0")
+    }
+}
+
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.4.4'
+	id 'io.spring.dependency-management' version '1.1.7'
+    id 'org.openapi.generator' version '7.4.0'
+    id 'com.google.cloud.tools.jib' version '3.4.1'
+}
+
+group = 'com.fastrelay'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+    // web
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // lombok
+	compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    // openapi
+    implementation('io.swagger:swagger-annotations:1.6.8')
+    implementation('org.openapitools:jackson-databind-nullable:0.2.3')
+    implementation('org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2')
+
+    // dao
+	runtimeOnly 'com.h2database:h2'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+openApiGenerate {
+    generatorName = "spring"
+    templateDir = "$rootDir/openapi/templates/spring-boot".toString()
+    inputSpec = "$rootDir/openapi/main.yaml".toString()
+    outputDir = layout.buildDirectory.file("generated/sources/openapi").get().asFile.path
+    apiPackage = "com.fastrelay.comment.api"
+    modelPackage = "com.fastrelay.comment.dto"
+    configOptions = [
+            dateLibrary         : "java8-localdatetime",
+            library             : "spring-boot",
+            interfaceOnly       : "true",
+            useTags             : "true",
+            skipDefaultInterface: "true",
+            useSpringBoot3      : "true"
+    ]
+    typeMappings = [
+            time: "java.time.LocalTime",
+            dateTime: "java.time.LocalDateTime"
+    ]
+}
+
+jib {
+    from {
+        image = "eclipse-temurin:21-jre"
+    }
+    to {
+        image = "herman87/fastrelay_payment:${project.version}"
+        tags = ["${project.version}"]
+    }
+}
+
+compileJava.dependsOn(
+        tasks.openApiGenerate
+)
+sourceSets.main.java.srcDir layout.buildDirectory.file("generated/sources/openapi/src/main/java").get().asFile.path
